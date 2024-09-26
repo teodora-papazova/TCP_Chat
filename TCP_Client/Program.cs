@@ -1,24 +1,24 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Threading; //добавяме библиотеки
 
-class Client
+class Client //клас
 {
-    private const int Port = 8888;
-    private const string ServerIp = "127.0.0.1";
+    private const int Port = 8888; //константа от числен тип за порт
+    private const string ServerIp = "127.0.0.1";//контанта от низов тип за IP на сървъра
 
-    static void Main()
+    static void Main() //главен клас
     {
-        TcpClient client = new TcpClient(ServerIp, Port);
-        Console.WriteLine("Connected to server. Start chatting!");
+        TcpClient client = new TcpClient(ServerIp, Port);//създаване на обект 
+        Console.WriteLine("Connected to server. Start chatting!");//изписва на екрана това в кавичките
 
         NetworkStream stream = client.GetStream();
 
-        Thread receiveThread = new Thread(ReceiveMessages);
+        Thread receiveThread = new Thread(ReceiveMessages);//създаване на обект
         receiveThread.Start(stream);
 
-        while (true)
+        while (true)//цикъл който чете съобщение и го записва в масив като байтове
         {
             string message = Console.ReadLine();
             byte[] buffer = Encoding.ASCII.GetBytes(message);
@@ -26,7 +26,7 @@ class Client
         }
     }
 
-    static void ReceiveMessages(object obj)
+    static void ReceiveMessages(object obj)//обект за получаване на съобщения
     {
         NetworkStream stream = (NetworkStream)obj;
         byte[] buffer = new byte[1024];
@@ -36,16 +36,16 @@ class Client
         {
             try
             {
-                bytesRead = stream.Read(buffer, 0, buffer.Length);
-                if (bytesRead == 0)
+                bytesRead = stream.Read(buffer, 0, buffer.Length);//чете съобщението като гледа колко числа има
+                if (bytesRead == 0)//когато числата свършат цикъла спира
                 {
                     break;
                 }
 
-                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                Console.WriteLine(message);
+                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);//запазва съобщението
+                Console.WriteLine(message);//изкарва съобщението на екрана
             }
-            catch (Exception)
+            catch (Exception)//ако се получи esception цикъла спира
             {
                 break;
             }
