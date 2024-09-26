@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Threading;//добавяме библиотеки
 
-class Server
+class Server//клас
 {
-    private static readonly List<TcpClient> clients = new List<TcpClient>();
-    private const int Port = 8888;
+    private static readonly List<TcpClient> clients = new List<TcpClient>();//списък
+    private const int Port = 8888;//константа от числен тип
 
-    static void Main()
+    static void Main()//главен клас
     {
-        TcpListener server = new TcpListener(IPAddress.Any, Port);
+        TcpListener server = new TcpListener(IPAddress.Any, Port);//обект
         server.Start();
-        Console.WriteLine($"Server started on port {Port}");
+        Console.WriteLine($"Server started on port {Port}");//изписва на екрана съобщение
 
-        while (true)
+        while (true)//сървъра получава клиенти и се записват в списъка
         {
             TcpClient client = server.AcceptTcpClient();
             clients.Add(client);
@@ -37,14 +37,14 @@ class Server
         {
             try
             {
-                bytesRead = stream.Read(buffer, 0, buffer.Length);
-                if (bytesRead == 0)
+                bytesRead = stream.Read(buffer, 0, buffer.Length);//чете съобщението като гледа колко числа има
+                if (bytesRead == 0)//когато числата свършат цикъла спира
                 {
                     break;
                 }
 
-                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                Console.WriteLine($"Received: {message}");
+                string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);//запазва съобщението
+                Console.WriteLine($"Received: {message}");//изкарва съобщението на екрана
 
                 BroadcastMessage(tcpClient, message);
             }
