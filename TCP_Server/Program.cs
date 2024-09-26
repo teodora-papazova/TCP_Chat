@@ -48,14 +48,14 @@ class Server//клас
 
                 BroadcastMessage(tcpClient, message);
             }
-            catch (Exception)
+            catch (Exception)//ако се получи esception цикъла спира
             {
                 break;
             }
         }
 
         clients.Remove(tcpClient);
-        tcpClient.Close();
+        tcpClient.Close();//затваря програмата
     }
 
     static void BroadcastMessage(TcpClient sender, string message)
