@@ -58,17 +58,18 @@ class Server//клас
         tcpClient.Close();//затваря програмата
     }
 
-    static void BroadcastMessage(TcpClient sender, string message)
+static void BroadcastMessage(TcpClient sender, string message)
+{
+    byte[] broadcastBuffer = Encoding.ASCII.GetBytes(message); //обхождане на всички клиенти в списъка clients
+    foreach (TcpClient client in clients)
     {
-        byte[] broadcastBuffer = Encoding.ASCII.GetBytes(message);
-
-        foreach (TcpClient client in clients)
+        if (client != sender)//проверка дали сегашният клиент не е този, който е изпратил съобщението
         {
-            if (client != sender)
-            {
-                NetworkStream stream = client.GetStream();
-                stream.Write(broadcastBuffer, 0, broadcastBuffer.Length);
-            }
+            NetworkStream stream = client.GetStream();
+            
+            //изпращане на съобщението към клиента
+            stream.Write(broadcastBuffer, 0, broadcastBuffer.Length);
         }
     }
 }
+
